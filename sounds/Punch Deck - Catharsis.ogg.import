@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Punch Deck - Catharsis.ogg-6d47cc1a3b3958a91df86837ddf2b064.oggstr"
+
+[deps]
+
+source_file="res://sounds/Punch Deck - Catharsis.ogg"
+dest_files=[ "res://.import/Punch Deck - Catharsis.ogg-6d47cc1a3b3958a91df86837ddf2b064.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

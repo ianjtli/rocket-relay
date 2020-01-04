@@ -1,0 +1,54 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://objects/Obstacle.tscn" type="PackedScene" id=1]
+[ext_resource path="res://objects/Enemy.gd" type="Script" id=2]
+[ext_resource path="res://images/Flames1.png" type="Texture" id=3]
+[ext_resource path="res://images/Flames2.png" type="Texture" id=4]
+[ext_resource path="res://images/Flames3.png" type="Texture" id=5]
+[ext_resource path="res://images/Enemy.png" type="Texture" id=6]
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 6 ) ],
+"loop": true,
+"name": "Default",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 20.8465
+
+[node name="Enemy" index="0" instance=ExtResource( 1 )]
+collision_mask = 9
+script = ExtResource( 2 )
+
+[node name="Flames" type="AnimatedSprite" parent="." index="0"]
+position = Vector2( 0, -30 )
+scale = Vector2( 0.5, 0.5 )
+frames = SubResource( 3 )
+playing = true
+flip_v = true
+
+[node name="Sprite" type="AnimatedSprite" parent="." index="1"]
+scale = Vector2( 0.5, 0.5 )
+frames = SubResource( 1 )
+animation = "Default"
+playing = true
+
+[node name="Rect" parent="." index="2"]
+visible = false
+
+[node name="CollisionShape2D" parent="." index="3"]
+shape = SubResource( 2 )
+
+[node name="Tween" type="Tween" parent="." index="8"]
+
+[connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]

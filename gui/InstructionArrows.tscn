@@ -1,0 +1,97 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://fonts/DefaultFont.tres" type="DynamicFont" id=1]
+[ext_resource path="res://images/Arrow.png" type="Texture" id=2]
+
+[node name="Arrows" type="Label"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -240.0
+margin_top = -348.0
+margin_right = 240.0
+margin_bottom = -106.0
+rect_min_size = Vector2( 0, 240 )
+custom_fonts/font = ExtResource( 1 )
+align = 1
+autowrap = true
+
+[node name="SpecialInstruction" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -38.6288
+margin_top = 83.1103
+margin_right = 41.3712
+margin_bottom = 163.11
+custom_fonts/font = ExtResource( 1 )
+text = "Use ability"
+align = 1
+autowrap = true
+
+[node name="NArrow" type="Sprite" parent="SpecialInstruction"]
+position = Vector2( 38.0738, 90.0227 )
+rotation = -1.5708
+scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 2 )
+
+[node name="SwitchInstruction" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -41.0238
+margin_top = 314.223
+margin_right = 38.9762
+margin_bottom = 394.223
+custom_fonts/font = ExtResource( 1 )
+text = "Switch rockets"
+align = 1
+autowrap = true
+
+[node name="SArrow" type="Sprite" parent="SwitchInstruction"]
+position = Vector2( 42.7728, -31.174 )
+rotation = 1.5708
+scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 2 )
+
+[node name="RightInstruction" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 80.7968
+margin_top = 201.062
+margin_right = 160.797
+margin_bottom = 281.062
+custom_fonts/font = ExtResource( 1 )
+text = "Move right"
+align = 1
+autowrap = true
+
+[node name="EArrow" type="Sprite" parent="RightInstruction"]
+position = Vector2( -25.5498, 27.898 )
+scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 2 )
+
+[node name="LeftInstruction" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -160.026
+margin_top = 203.457
+margin_right = -80.0258
+margin_bottom = 283.457
+custom_fonts/font = ExtResource( 1 )
+text = "Move left"
+align = 1
+autowrap = true
+
+[node name="WArrow" type="Sprite" parent="LeftInstruction"]
+position = Vector2( 107.132, 28.566 )
+rotation = -3.14159
+scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 2 )

@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://rockets/Rocket.tscn" type="PackedScene" id=1]
+[ext_resource path="res://rockets/MiniRocket.gd" type="Script" id=2]
+[ext_resource path="res://images/MiniRocket.png" type="Texture" id=3]
+[ext_resource path="res://sounds/fade_sound.wav" type="AudioStream" id=4]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 3 ) ],
+"loop": true,
+"name": "paused",
+"speed": 5.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 23.5166
+height = 11.7731
+
+[node name="MiniRocket" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+
+[node name="Flames" parent="." index="0"]
+position = Vector2( 0, 40 )
+scale = Vector2( 0.6, 0.6 )
+frame = 0
+
+[node name="Rocket" parent="." index="1"]
+frames = SubResource( 1 )
+
+[node name="CollisionShape2D" parent="." index="3"]
+shape = SubResource( 2 )
+
+[node name="AudioStreamPlayer2D" parent="." index="10"]
+stream = ExtResource( 4 )
+volume_db = 0.0
+

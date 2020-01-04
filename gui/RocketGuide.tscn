@@ -1,0 +1,150 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://levels/Level.tscn" type="PackedScene" id=1]
+[ext_resource path="res://gui/RocketGuide.gd" type="Script" id=2]
+[ext_resource path="res://fonts/DefaultFont.tres" type="DynamicFont" id=3]
+[ext_resource path="res://fonts/SmallFont.tres" type="DynamicFont" id=4]
+[ext_resource path="res://sounds/upgrade_sound.wav" type="AudioStream" id=5]
+
+[sub_resource type="Theme" id=1]
+default_font = ExtResource( 4 )
+
+[node name="Node" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+
+[node name="BackButton" parent="GUI" index="2"]
+margin_bottom = 40.0
+
+[node name="Flames" parent="GUI/Examples/Enemy" index="0"]
+frame = 1
+
+[node name="Arrows" parent="GUI" index="9"]
+margin_left = -55.8391
+margin_top = -177.344
+margin_right = 424.161
+margin_bottom = 64.6558
+
+[node name="Menu" type="MarginContainer" parent="GUI" index="10"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 50.0
+margin_top = 100.0
+margin_right = -50.0
+margin_bottom = -371.0
+
+[node name="MenuVBox" type="VBoxContainer" parent="GUI/Menu" index="0"]
+margin_right = 380.0
+margin_bottom = 329.0
+custom_constants/separation = 20
+
+[node name="RocketName" type="Label" parent="GUI/Menu/MenuVBox" index="0"]
+margin_right = 380.0
+margin_bottom = 27.0
+custom_fonts/font = ExtResource( 3 )
+align = 1
+autowrap = true
+
+[node name="RocketDesc" type="Label" parent="GUI/Menu/MenuVBox" index="1"]
+margin_top = 47.0
+margin_right = 380.0
+margin_bottom = 69.0
+custom_fonts/font = ExtResource( 4 )
+align = 1
+autowrap = true
+
+[node name="BuyRocket" type="Button" parent="GUI/Menu/MenuVBox" index="2"]
+margin_top = 89.0
+margin_right = 380.0
+margin_bottom = 139.0
+rect_min_size = Vector2( 0, 50 )
+custom_fonts/font = ExtResource( 4 )
+text = "Purchase Rocket"
+
+[node name="MenuHBox" type="HBoxContainer" parent="GUI/Menu/MenuVBox" index="3"]
+margin_top = 159.0
+margin_right = 380.0
+margin_bottom = 329.0
+
+[node name="UpgradeLabels" type="VBoxContainer" parent="GUI/Menu/MenuVBox/MenuHBox" index="0"]
+margin_right = 270.0
+margin_bottom = 170.0
+custom_constants/separation = 10
+
+[node name="Upgrade1" type="Label" parent="GUI/Menu/MenuVBox/MenuHBox/UpgradeLabels" index="0"]
+margin_right = 270.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 270, 50 )
+custom_fonts/font = ExtResource( 3 )
+valign = 1
+
+[node name="Upgrade2" type="Label" parent="GUI/Menu/MenuVBox/MenuHBox/UpgradeLabels" index="1"]
+margin_top = 60.0
+margin_right = 270.0
+margin_bottom = 110.0
+rect_min_size = Vector2( 250, 50 )
+custom_fonts/font = ExtResource( 3 )
+valign = 1
+
+[node name="Upgrade3" type="Label" parent="GUI/Menu/MenuVBox/MenuHBox/UpgradeLabels" index="2"]
+margin_top = 120.0
+margin_right = 270.0
+margin_bottom = 170.0
+rect_min_size = Vector2( 250, 50 )
+custom_fonts/font = ExtResource( 3 )
+valign = 1
+
+[node name="UpgradeButtons" type="VBoxContainer" parent="GUI/Menu/MenuVBox/MenuHBox" index="1"]
+margin_left = 274.0
+margin_right = 374.0
+margin_bottom = 170.0
+custom_constants/separation = 10
+
+[node name="Upgrade1" type="Button" parent="GUI/Menu/MenuVBox/MenuHBox/UpgradeButtons" index="0"]
+margin_right = 100.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 100, 50 )
+custom_fonts/font = ExtResource( 4 )
+
+[node name="Upgrade2" type="Button" parent="GUI/Menu/MenuVBox/MenuHBox/UpgradeButtons" index="1"]
+margin_top = 60.0
+margin_right = 100.0
+margin_bottom = 110.0
+rect_min_size = Vector2( 100, 50 )
+custom_fonts/font = ExtResource( 4 )
+
+[node name="Upgrade3" type="Button" parent="GUI/Menu/MenuVBox/MenuHBox/UpgradeButtons" index="2"]
+margin_top = 120.0
+margin_right = 100.0
+margin_bottom = 170.0
+rect_min_size = Vector2( 100, 50 )
+custom_fonts/font = ExtResource( 4 )
+
+[node name="Credits" type="Label" parent="GUI" index="11"]
+anchor_right = 1.0
+margin_left = 0.902496
+margin_top = 35.1976
+margin_right = 0.902496
+margin_bottom = 57.1976
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 0.337255, 1, 0, 1 )
+text = "Credits: 0"
+
+[node name="MsgBox" type="AcceptDialog" parent="GUI" index="12"]
+margin_left = 114.0
+margin_top = 163.0
+margin_right = 314.0
+margin_bottom = 263.0
+grow_horizontal = 2
+rect_min_size = Vector2( 200, 100 )
+theme = SubResource( 1 )
+window_title = "Error"
+
+[node name="DistanceBar" parent="GUI" index="13"]
+visible = false
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." index="2"]
+stream = ExtResource( 5 )
+[connection signal="pressed" from="GUI/Menu/MenuVBox/BuyRocket" to="." method="_on_BuyRocket_pressed"]
+[connection signal="pressed" from="GUI/Menu/MenuVBox/MenuHBox/UpgradeButtons/Upgrade1" to="." method="_on_Upgrade1_pressed"]
+[connection signal="pressed" from="GUI/Menu/MenuVBox/MenuHBox/UpgradeButtons/Upgrade2" to="." method="_on_Upgrade2_pressed"]
+[connection signal="pressed" from="GUI/Menu/MenuVBox/MenuHBox/UpgradeButtons/Upgrade3" to="." method="_on_Upgrade3_pressed"]

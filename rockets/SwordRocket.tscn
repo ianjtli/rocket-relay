@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://rockets/Rocket.tscn" type="PackedScene" id=1]
+[ext_resource path="res://rockets/SwordRocket.gd" type="Script" id=2]
+[ext_resource path="res://objects/Sword.tscn" type="PackedScene" id=3]
+[ext_resource path="res://images/SwordRocket.png" type="Texture" id=4]
+[ext_resource path="res://sounds/sword_sound.wav" type="AudioStream" id=5]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "paused",
+"speed": 5.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 13.9962
+height = 71.3978
+
+[node name="Rocket" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+Bullet = null
+Sword = ExtResource( 3 )
+
+[node name="Flames" parent="." index="0"]
+position = Vector2( 0, 53.153 )
+scale = Vector2( 0.6, 0.6 )
+frame = 0
+
+[node name="Rocket" parent="." index="1"]
+frames = SubResource( 1 )
+playing = true
+
+[node name="CollisionShape2D" parent="." index="3"]
+shape = SubResource( 2 )
+
+[node name="AudioStreamPlayer2D" parent="." index="10"]
+stream = ExtResource( 5 )
+volume_db = 0.0
+

@@ -1,0 +1,33 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://objects/Boss.tscn" type="PackedScene" id=1]
+[ext_resource path="res://objects/Boss2.gd" type="Script" id=2]
+[ext_resource path="res://objects/Enemy.tscn" type="PackedScene" id=3]
+[ext_resource path="res://images/EnemyCombo.png" type="Texture" id=4]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 78.7594, 34.6121 )
+
+[node name="Boss" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+Enemy = ExtResource( 3 )
+
+[node name="Flames" parent="." index="0"]
+scale = Vector2( 2, 1 )
+frame = 1
+
+[node name="Sprite" parent="." index="1"]
+frames = SubResource( 1 )
+
+[node name="CollisionShape2D" parent="." index="3"]
+position = Vector2( 0, 21.0841 )
+shape = SubResource( 2 )
+

@@ -1,0 +1,126 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://rockets/Rocket.gd" type="Script" id=1]
+[ext_resource path="res://objects/Bullet.tscn" type="PackedScene" id=2]
+[ext_resource path="res://images/Flames1.png" type="Texture" id=3]
+[ext_resource path="res://images/Flames2.png" type="Texture" id=4]
+[ext_resource path="res://images/Flames3.png" type="Texture" id=5]
+[ext_resource path="res://images/BoringRocket.png" type="Texture" id=6]
+[ext_resource path="res://objects/Explosion.tscn" type="PackedScene" id=7]
+[ext_resource path="res://sounds/shoot_sound.wav" type="AudioStream" id=8]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "Default",
+"speed": 4.0
+} ]
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 6 ) ],
+"loop": true,
+"name": "paused",
+"speed": 5.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 15.177
+height = 129.657
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.0196078, 0.890196, 0.0156863, 1 )
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+corner_detail = 4
+
+[sub_resource type="StyleBoxEmpty" id=5]
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 1, 0, 0, 1 )
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+corner_detail = 4
+
+[sub_resource type="StyleBoxEmpty" id=7]
+
+[node name="Rocket" type="Area2D"]
+z_index = 1
+collision_mask = 6
+script = ExtResource( 1 )
+Bullet = ExtResource( 2 )
+
+[node name="Flames" type="AnimatedSprite" parent="."]
+position = Vector2( 0, 105 )
+scale = Vector2( 0.8, 0.8 )
+frames = SubResource( 1 )
+animation = "Default"
+frame = 2
+playing = true
+
+[node name="Rocket" type="AnimatedSprite" parent="."]
+scale = Vector2( 0.6, 0.6 )
+frames = SubResource( 2 )
+animation = "paused"
+
+[node name="Explosion" parent="." instance=ExtResource( 7 )]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 3 )
+
+[node name="Camera" type="Camera2D" parent="."]
+offset = Vector2( 0, -300 )
+limit_left = -240
+limit_right = 240
+limit_bottom = 1000
+smoothing_enabled = true
+drag_margin_left = 1.0
+drag_margin_right = 1.0
+
+[node name="SpecialTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="SpecialTime" type="ProgressBar" parent="."]
+visible = false
+use_parent_material = true
+anchor_bottom = 1.0
+margin_left = 40.0
+margin_top = 10.0
+margin_right = 60.0
+margin_bottom = 18.0
+rect_rotation = -90.0
+custom_styles/fg = SubResource( 4 )
+custom_styles/bg = SubResource( 5 )
+value = 100.0
+percent_visible = false
+
+[node name="CDTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="CDTime" type="ProgressBar" parent="."]
+visible = false
+anchor_bottom = 1.0
+margin_left = 40.0
+margin_top = 10.0
+margin_right = 60.0
+margin_bottom = 18.0
+rect_rotation = -90.0
+custom_styles/fg = SubResource( 6 )
+custom_styles/bg = SubResource( 7 )
+value = 100.0
+percent_visible = false
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 8 )
+volume_db = -7.068
+[connection signal="area_entered" from="." to="." method="_on_Rocket_area_entered"]
+[connection signal="timeout" from="SpecialTimer" to="." method="_on_SpecialTimer_timeout"]
+[connection signal="timeout" from="CDTimer" to="." method="_on_CDTimer_timeout"]
+[connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
