@@ -1,10 +1,9 @@
 extends "res://levels/Level.gd"
 
-
 func _onready():
 	initialMousePos = Vector2(0, 0)
 	
-	#Rockets
+	#All rockets
 	rockets = global.getAllRockets()
 	addRockets()
 	
@@ -22,21 +21,15 @@ func _onready():
 	$ParallaxBackground.setSpeed(100)
 	
 	updateRocketGUI()
-	
-	#Show arrow instructions just for seeing other rockets
-	$GUI/Arrows.show()
-	$GUI/Arrows/SpecialInstruction.hide()
-	$GUI/Arrows/RightInstruction.hide()
-	$GUI/Arrows/LeftInstruction.hide()
-	$GUI/Arrows/SwitchInstruction.text = "See next rocket"
 
-#Update GUI for switching rockets
+
+#Update screen for rocket description and upgrades
 func updateRocketGUI():
 	$GUI/Arrows.hide()
 	#Reset rocket settings
 	rockets[0].setDefaults()
 	$GUI/Menu/MenuVBox/RocketName.text = rockets[0].rocketName
-	$GUI/Menu/MenuVBox/RocketDesc.text = rockets[0].rocketDesc
+	$GUI/Menu/MenuVBox/RocketDesc.text = rockets[0].rocketDesc + "\n\n" + "Ability: " + rockets[0].specialDesc
 	$GUI/Credits.text = "Credits: " + str(global.getCredits())
 	
 	#Populate upgrade buttons
@@ -64,15 +57,15 @@ func updateRocketGUI():
 		$GUI/Menu/MenuVBox/MenuHBox/UpgradeButtons/Upgrade2.disabled = true
 		$GUI/Menu/MenuVBox/MenuHBox/UpgradeButtons/Upgrade3.disabled = true
 
-#Purchase rocket
+
 func _on_BuyRocket_pressed():
+	#Purchase rocket
 	if global.getRocketList()[rockets[0].rocketName] == 0:
 		if global.getCredits() >= rockets[0].rocketCost:
-			global.spendCredits (rockets[0].rocketCost)
-			global.buyRocket(rockets[0].rocketName)
-			playSound()
+			$GUI/UpgradeConfirmation.showUpgrade(rockets[0],0)
 		else:
 			showMsgBox("Error","Not enough credits")
+	#Add/remove rocket from queue
 	else:
 		#Must have at least 2 rockets active
 		if global.getActiveRockets().size() > 2 or $GUI/Menu/MenuVBox/BuyRocket.text == "Add rocket to lineup":
@@ -81,42 +74,23 @@ func _on_BuyRocket_pressed():
 			showMsgBox("Error","Must have at least 2 rockets\nin your lineup")
 	updateRocketGUI()
 
-#Purchase upgrades
+#Purchase upgrade
 func _on_Upgrade1_pressed():
-	if global.getRocketList()[rockets[0].rocketName + "Upgrade1"] == 1:
-		global.toggleUpgrade(rockets[0].rocketName + "Upgrade1")
-	elif global.getCredits() >= rockets[0].upgradeCosts[1]:
-		global.spendCredits (rockets[0].upgradeCosts[1])
-		global.buyRocketUpgrade(rockets[0].rocketName, 1)
-		playSound()
-	else:
-		showMsgBox("Error","Not enough credits")
-	updateRocketGUI()
+	buyUpgrade(1)
 func _on_Upgrade2_pressed():
-	if global.getRocketList()[rockets[0].rocketName + "Upgrade2"] == 1:
-		global.toggleUpgrade(rockets[0].rocketName + "Upgrade2")
-	elif global.getCredits() >= rockets[0].upgradeCosts[2]:
-		global.spendCredits (rockets[0].upgradeCosts[2])
-		global.buyRocketUpgrade(rockets[0].rocketName, 2)
-		playSound()
-	else:
-		showMsgBox("Error","Not enough credits")
-	updateRocketGUI()
+	buyUpgrade(2)
 func _on_Upgrade3_pressed():
-	if global.getRocketList()[rockets[0].rocketName + "Upgrade3"] == 1:
-		global.toggleUpgrade(rockets[0].rocketName + "Upgrade3")
-	elif global.getCredits() >= rockets[0].upgradeCosts[3]:
-		global.spendCredits (rockets[0].upgradeCosts[3])
-		global.buyRocketUpgrade(rockets[0].rocketName, 3)
-		playSound()
+	buyUpgrade(3)
+func buyUpgrade(upgradeNum):
+	#If upgrade already bought, toggle it active/inactive
+	if global.getRocketList()[rockets[0].rocketName + "Upgrade" + str(upgradeNum)] == 1:
+		global.toggleUpgrade(rockets[0].rocketName + "Upgrade" + str(upgradeNum))
+	#Otherwise, try to buy upgrade
+	elif global.getCredits() >= rockets[0].upgradeCosts[upgradeNum]:
+		$GUI/UpgradeConfirmation.showUpgrade(rockets[0],upgradeNum)
 	else:
 		showMsgBox("Error","Not enough credits")
 	updateRocketGUI()
-
-#Play upgrade sound
-func playSound():
-	if global.getSoundOn() == true:
-		$AudioStreamPlayer2D.play()
 
 #Show the message box confirmation or error message 
 func showMsgBox(type,msg):
@@ -134,3 +108,7 @@ func updateHpBar(hpChange):
 #Back to main menu
 func quitScene():
 	_on_BackButton_pressed()
+
+#Update GUI after purchase complete
+func _on_UpgradeConfirmation_purchaseComplete():
+	updateRocketGUI()

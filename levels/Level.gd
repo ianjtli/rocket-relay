@@ -8,6 +8,7 @@ export (PackedScene) var MiniRocket
 export (PackedScene) var ShieldRocket
 export (PackedScene) var Powerup
 export (PackedScene) var HpPowerup
+const HpSprite = preload("res://gui/HpSprite.tscn")
 var starTexture : Texture = preload("res://images/Star.png")
 
 #Gameplay variables
@@ -88,31 +89,31 @@ func initializeGUI():
 	#Reset GUI
 	updateScore(0)
 
-#Show instructions (on first level)
+#Show instructions (for first level)
 func showInstructions():
 	$GUI/Instruction.show()
-	$GUI/SkipInstructions.show()
-	#How to control rocket
+	$GUI/NextInstruction.show()
+	
+	showInstructionsControls()
+#How to control rocket
+func showInstructionsControls():
 	$GUI/Arrows.show()
 	$GUI/Instruction.text = "Swipe to control your rocket"
-	yield(get_tree().create_timer(5),"timeout")
+#What to collect or avoid
+func showInstructionsGameAttributes():
 	$GUI/Arrows.hide()
-	
-	#What to collect or avoid
 	$GUI/Examples.show()
 	$GUI/Instruction.text = "Avoid or destroy enemies\n\nCollect green power cells for points, collect repair packs to increase HP"
-	yield(get_tree().create_timer(5),"timeout")
-	$GUI/Examples.hide()
-	
-	#End instructions
-	_on_SkipInstructions_pressed()
-#Skip instructions
-func _on_SkipInstructions_pressed():
-	showInstructions = false
-	$GUI/Instruction.hide()
-	$GUI/SkipInstructions.hide()
-	$GUI/Examples.hide()
-	$GUI/Arrows.hide()
+#Next instruction
+func _on_NextInstruction_pressed():
+	if $GUI/Instruction.text == "Swipe to control your rocket":
+		showInstructionsGameAttributes()
+	else:
+		showInstructions = false
+		$GUI/Instruction.hide()
+		$GUI/NextInstruction.hide()
+		$GUI/Examples.hide()
+		$GUI/Arrows.hide()
 
 
 ### Game processing ###
@@ -271,46 +272,31 @@ func switchRockets(switchPlace):
 
 #Show queue of rockets
 func updateRocketQueue():
-	var tempRocket
+	#For each inactive rocket, show a copy of that rocket in the queue (along with active abilities and timers)
 	if rockets.size() >= 2:
-		if $GUI/RocketQueue/Rocket1.get_children().size() > 0:
-			tempRocket = $GUI/RocketQueue/Rocket1.get_child(0)
-			$GUI/RocketQueue/Rocket1.remove_child(tempRocket)
-			tempRocket.queue_free()
-		$GUI/RocketQueue/Rocket1.add_child(rockets[1].duplicate())
-		tempRocket = $GUI/RocketQueue/Rocket1.get_child(0)
-		tempRocket.show()
-		tempRocket.position = Vector2(30,33)
-		
-		copyTimers(tempRocket,rockets[1])
-	
+		updateRocketSlot($GUI/RocketQueue/Rocket1,rockets[1])
 	if rockets.size() >= 3:
-		if $GUI/RocketQueue/Rocket2.get_children().size() > 0:
-			tempRocket = $GUI/RocketQueue/Rocket2.get_child(0)
-			$GUI/RocketQueue/Rocket2.remove_child(tempRocket)
-			tempRocket.queue_free()
-		$GUI/RocketQueue/Rocket2.add_child(rockets[2].duplicate())
-		tempRocket = $GUI/RocketQueue/Rocket2.get_child(0)
-		tempRocket.show()
-		tempRocket.position = Vector2(30,33)
-		
-		copyTimers(tempRocket,rockets[2])
+		updateRocketSlot($GUI/RocketQueue/Rocket2,rockets[2])
 	else:
 		$GUI/RocketQueue/Rocket2.hide()
-	
 	if rockets.size() >= 4:
-		if $GUI/RocketQueue/Rocket3.get_children().size() > 0:
-			tempRocket = $GUI/RocketQueue/Rocket3.get_child(0)
-			$GUI/RocketQueue/Rocket3.remove_child(tempRocket)
-			tempRocket.queue_free()
-		$GUI/RocketQueue/Rocket3.add_child(rockets[3].duplicate())
-		tempRocket = $GUI/RocketQueue/Rocket3.get_child(0)
-		tempRocket.show()
-		tempRocket.position = Vector2(30,33)
-		
-		copyTimers(tempRocket,rockets[3])
+		updateRocketSlot($GUI/RocketQueue/Rocket3,rockets[3])
 	else:
 		$GUI/RocketQueue/Rocket3.hide()
+#Update the slot for the inactive rocket
+func updateRocketSlot(slot,inactiveRocket):
+	var tempRocket
+	if slot.get_children().size() > 0:
+		tempRocket = slot.get_child(0)
+		slot.remove_child(tempRocket)
+		tempRocket.queue_free()
+	slot.add_child(inactiveRocket.duplicate())
+	tempRocket = slot.get_child(0)
+	tempRocket.show()
+	tempRocket.position = Vector2(30,33)
+	
+	copyTimers(tempRocket,inactiveRocket)
+#Copy timers from inactive rocket to queue placeholder rocket
 func copyTimers(rocket,rocketToCopy):
 	if rocketToCopy.get_node("SpecialTimer").is_stopped() == false:
 		rocket.get_node("SpecialTimer").wait_time = rocketToCopy.get_node("SpecialTimer").time_left
@@ -372,21 +358,17 @@ func updateHpBar(hpChange):
 	#Update HP label
 	$GUI/HpLabel.text = str(rocketHp) + " HP"
 	
-	#Update HP icons
-	if get_tree().get_nodes_in_group("hpSprites").size() == 0:
-		var hpSprite
-		for i in range(0,10):
-			hpSprite = Sprite.new()
-			hpSprite.position = Vector2(15, -20 - i * 30)
-			hpSprite.texture = $GUI/Hp.texture
-			hpSprite.scale = Vector2(0.3, 0.3)
-			$GUI/HpLabel.add_child(hpSprite)
-			hpSprite.add_to_group("hpSprites")
-	for i in get_tree().get_nodes_in_group("hpSprites").size():
-		if i < rocketHp:
-			get_tree().get_nodes_in_group("hpSprites")[i].show()
-		else:
-			get_tree().get_nodes_in_group("hpSprites")[i].hide()
+	var hpSprites = get_tree().get_nodes_in_group("hpSprites")
+	#Remove excess HP sprites
+	if rocketHp < hpSprites.size():
+		for i in range(rocketHp,hpSprites.size()):
+			hpSprites[i].queue_free()
+	#Add new HP sprites
+	else:
+		for i in range(get_tree().get_nodes_in_group("hpSprites").size(),rocketHp):
+			var newHpSprite = HpSprite.instance()
+			newHpSprite.position = Vector2(15, -20 - i * 30)
+			$GUI/HpLabel.add_child(newHpSprite)
 
 
 

@@ -1,6 +1,10 @@
 extends Control
 
-var levelEnded
+var levelEnded : bool
+var tips : Array = ["switch rockets when your ability is on cooldown to take advantage of teammates' abilities",
+	"some rockets become a lot more useful with upgrades, use credits to upgrade their abilities in the upgrade shop",
+	"mini rocket's ability avoids all enemies for a short duration, use it to get out of impossible situations",
+	"smaller and faster rockets may be able to better maneuver in tight spots"]
 
 #Show labels/buttons based on state of game
 func showType(type):
@@ -42,13 +46,8 @@ func showType(type):
 #Randomly select a tip to show
 func showTips():
 	$VBox/TipLabel.show()
-	var randNum = randi() % 3
-	if randNum == 0:
-		$VBox/TipLabel.text += "Tip: switch rockets when your ability is on cooldown to take advantage of other rockets' abilities"
-	elif randNum == 1:
-		$VBox/TipLabel.text += "Tip: upgrade your rockets' abilities in the store"
-	elif randNum == 2:
-		$VBox/TipLabel.text += "Tip: mini rocket's ability avoids all enemies for a short duration to get out of tight spots"
+	var randNum = randi() % tips.size()
+	$VBox/TipLabel.text = "Tip: " + tips[randNum]
 
 #Unpause
 func _on_UnpauseButton_pressed():

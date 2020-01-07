@@ -171,6 +171,7 @@ text = "Enemy"
 position = Vector2( 25.1539, 31.8273 )
 scale = Vector2( 0.5, 0.5 )
 frames = SubResource( 1 )
+frame = 2
 playing = true
 flip_v = true
 
@@ -214,17 +215,18 @@ custom_fonts/font = ExtResource( 11 )
 custom_colors/font_color = Color( 0, 1, 0.0862745, 1 )
 text = "+1"
 
-[node name="SkipInstructions" type="Button" parent="GUI"]
+[node name="NextInstruction" type="Button" parent="GUI"]
 visible = false
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -106.0
-margin_top = 725.0
-margin_right = -3.0
-margin_bottom = 780.0
-rect_min_size = Vector2( 100, 55 )
-custom_fonts/font = ExtResource( 10 )
-text = "Skip"
+margin_left = -116.0
+margin_top = 730.0
+margin_right = -2.0
+margin_bottom = 790.0
+rect_min_size = Vector2( 100, 70 )
+custom_fonts/font = ExtResource( 11 )
+custom_colors/font_color = Color( 0, 1, 0, 1 )
+text = "Got it"
 
 [node name="Arrows" parent="GUI" instance=ExtResource( 18 )]
 visible = false
@@ -247,12 +249,6 @@ texture = ExtResource( 19 )
 [node name="PauseMenu" parent="GUI" instance=ExtResource( 20 )]
 visible = false
 
-[node name="Hp" type="Sprite" parent="GUI"]
-visible = false
-position = Vector2( 10, 480 )
-scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 17 )
-
 [node name="HpLabel" type="Label" parent="GUI"]
 margin_top = 450.0
 margin_right = 22.0
@@ -266,4 +262,4 @@ text = "HP"
 [connection signal="pressed" from="GUI/RocketQueue/Rocket1" to="." method="_on_Rocket1_pressed"]
 [connection signal="pressed" from="GUI/RocketQueue/Rocket2" to="." method="_on_Rocket2_pressed"]
 [connection signal="pressed" from="GUI/RocketQueue/Rocket3" to="." method="_on_Rocket3_pressed"]
-[connection signal="pressed" from="GUI/SkipInstructions" to="." method="_on_SkipInstructions_pressed"]
+[connection signal="pressed" from="GUI/NextInstruction" to="." method="_on_NextInstruction_pressed"]

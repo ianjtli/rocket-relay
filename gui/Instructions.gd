@@ -10,6 +10,7 @@ func showNextInstruction():
 	$GUI/NextInstruction.show()
 	#Explain left/right movement
 	if currentInstruction == "LeftRight":
+		$GUI/NextInstruction.text = "Got it"
 		$GUI/Arrows/SpecialInstruction.hide()
 		$GUI/Arrows/SwitchInstruction.hide()
 		$GUI/Instruction.text = "Control your rocket by swiping.\n\nSwipe left/right to move your rocket."
@@ -78,11 +79,13 @@ func showNextInstruction():
 				newEnemy.position = Vector2((i - 2) * moveDistance, -i * 500 - 700)
 				add_child(newEnemy)
 		currentInstruction = "LeftRight"
+		
+		#Prompt user to restart instructions
+		$GUI/NextInstruction.text = "Read Again"
 
 #Set up rockets for instruction screen
 func _onready():
 	initialMousePos = Vector2(0, 0)
-	moveDistance = screenSize.x / 3
 	score = 0
 	
 	#Show all rockets
@@ -90,9 +93,8 @@ func _onready():
 	addRockets()
 	
 	#GUI
-	for item in $GUI/PauseMenu.get_children():
-		item.hide()
 	$ParallaxBackground.setSpeed(100)
+	$GUI/NextInstruction.show()
 	
 	initializeGUI()
 	showNextInstruction()
@@ -210,6 +212,20 @@ func useSpecial(preview):
 		$GUI/GestureDescription.text = rockets[0].specialDesc
 		$GUI/Arrows/SpecialInstruction.modulate = Color(0,1,0)
 		$GUI/MouseStart/MouseStart2.modulate = Color(0,1,0)
+
+#If player somehow loses on instruction page
+func endLevel(win):
+	levelEnded = true
+	$GUI/PauseMenu.levelEnded = true
+	$GUI/PauseMenu.showType("lose")
+	rockets[0].explode()
+	$GUI/PauseMenu/VBox/LevelCompleteLabel.text = "If you reach 0 HP, the game ends and you will have to restart the level."
+	
+	#Wait 1 second before pausing everything
+	yield(get_tree().create_timer(.5),"timeout")
+	get_tree().paused = true
+	#Update GUI
+	$GUI/PauseButton.hide()
 
 #Override movement from Rocket class
 func _callprocess(delta):

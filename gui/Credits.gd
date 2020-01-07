@@ -24,15 +24,16 @@ func _ready():
 	$GUI/HpLabel.hide()
 	$GUI/NextInstruction.hide()
 
-#Move to next credit
+#Show next credit
 func switchRocketTrigger(preview):
 	if !preview:
 		switchRockets(1)
-		$GUI/Instruction.text = "\n\n\n\n" + creditText[rockets[0].rocketName]
 	else:
 		$GUI/GestureDescription.text = "Next Credit"
 		$GUI/Arrows/SwitchInstruction.modulate = Color(1,0,0)
 		$GUI/MouseStart/MouseStart2.modulate = Color(1,0,0)
+func updateRocketGUI():
+	$GUI/Instruction.text = "\n\n\n\n" + creditText[rockets[0].rocketName]
 
 #Override
 func showNextInstruction():
